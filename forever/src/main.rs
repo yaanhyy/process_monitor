@@ -30,12 +30,15 @@ fn main() {
                 println!("Continuing execution in parent process, new child has pid: {}", child);
             }
             Ok(Fork::Child) => {
-                if let Ok(Fork::Child) = daemon(false, false) {
+               // if let Ok(Fork::Child) = daemon(false, false) {
                     println!("process run:{}", &pid_name);
                     while(true) {
+                        let ten_millis = Duration::from_millis(1000);
 
+
+                        thread::sleep(ten_millis);
                     }
-                }
+               // }
             },
             Err(_) => println!("Fork failed"),
         }
