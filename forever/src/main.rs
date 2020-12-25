@@ -1,4 +1,6 @@
 use std::{io, thread, time::Duration, env, convert::AsRef};
+use fork::{fork, daemon, Fork};
+use std::process::Command;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -21,13 +23,33 @@ fn main() {
             .expect("Failed to read line");
 
         println!("You input process name is: {}", pid_name);
-        thread::spawn(move || {
-            println!("process run:{}", &pid_name);
-           while(true) {
+
+        /// spawn process
+        match fork() {
+            Ok(Fork::Parent(child)) => {
+                println!("Continuing execution in parent process, new child has pid: {}", child);
+            }
+            Ok(Fork::Child) => {
+                if let Ok(Fork::Child) = daemon(false, false) {
+                    println!("process run:{}", &pid_name);
+                    while(true) {
+
+                    }
+                }
+            },
+            Err(_) => println!("Fork failed"),
+        }
 
 
-           }
-        });
+
+        // spawn thread
+        // thread::spawn(move || {
+        //     println!("process run:{}", &pid_name);
+        //    while(true) {
+        //
+        //
+        //    }
+        // });
     }
 
     println!("exit!");
