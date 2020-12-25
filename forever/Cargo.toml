@@ -1,0 +1,9 @@
+[package]
+name = "forever"
+version = "0.1.0"
+authors = ["hongyuanyang <hongyuanyang@huobi.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
