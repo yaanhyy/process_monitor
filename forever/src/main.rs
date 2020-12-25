@@ -16,7 +16,7 @@ fn main() {
 
 
 
-    while(true) {
+    //while(true) {
         let mut pid_name = String::new();
         io::stdin()
             .read_line(&mut pid_name)
@@ -50,7 +50,7 @@ fn main() {
         //
         //    }
         // });
-    }
+    //}
 
     println!("exit!");
 }
