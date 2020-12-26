@@ -10,7 +10,7 @@ pub struct ProcessInfo {
     pub status: String,  //runing, killed, restart
 }
 
-fn scan_process_info(process_name: &str, mut process_infos: HashMap<String,ProcessInfo>) ->  HashMap<String,ProcessInfo> {
+fn scan_process_info(process_name: &str, mut process_infos: & mut HashMap<String,ProcessInfo>)  {
     let output= Command::new("ps")
         .arg("ax")
         .output()
@@ -21,15 +21,10 @@ fn scan_process_info(process_name: &str, mut process_infos: HashMap<String,Proce
     let mut ori_pids: Vec<String> = Vec::new();
 
 
-    let mut proces_scan: HashMap<String,ProcessInfo> = HashMap::new();
 
-    //proces_scan = process_infos.iter_mut().map(|info| {info.1.status="killed".to_string(); return info}).collect();
-    let mut proc_keys = process_infos.keys();
-    for key in proc_keys {
-        let info = process_infos.get(key).unwrap();
-        //info.status = "killed".to_string();
-        proces_scan.insert(key.clone(), ProcessInfo{pid: info.pid.clone(), arg: info.arg.clone(), status:"killed".to_string()});
-    }
+
+    process_infos.iter_mut().for_each(|(_,info)| {info.status="killed".to_string()});
+
 
     for line in lines {
         if line.contains(process_name) {
@@ -48,9 +43,9 @@ fn scan_process_info(process_name: &str, mut process_infos: HashMap<String,Proce
                  println!("arg:{:?}", arg);
                  if !ori_pids.contains(&pid) {
                      let status = "running".to_string();
-                     proces_scan.insert(pid.clone(),ProcessInfo { pid, arg, status});
+                     process_infos.insert(pid.clone(),ProcessInfo { pid, arg, status});
                  } else {
-                     let info = proces_scan.get_mut(&pid).unwrap();
+                     let info = process_infos.get_mut(&pid).unwrap();
                      info.status = "running".to_string();
                  }
 
@@ -59,11 +54,11 @@ fn scan_process_info(process_name: &str, mut process_infos: HashMap<String,Proce
     }
 
 
-    let mut proc_keys = proces_scan.keys();
+    let mut proc_keys = process_infos.keys();
     let mut killed_keys = Vec::new();
     for  key in proc_keys {
 
-        let  info = proces_scan.get(key);
+        let  info = process_infos.get(key);
         println!("proc index:{}, proc info:{:?}", key, info);
         if info.is_none() {
             continue;
@@ -83,9 +78,9 @@ fn scan_process_info(process_name: &str, mut process_infos: HashMap<String,Proce
     }
 
     for key in killed_keys {
-        proces_scan.remove(&key);
+        process_infos.remove(&key);
     }
-    return proces_scan;
+
 }
 
 fn main() {
@@ -100,9 +95,9 @@ fn main() {
     println!("input process name:{}", input);
     let mut process_infos = HashMap::new();
     while(true) {
-        process_infos = scan_process_info(&input, process_infos);
+        scan_process_info(&input, & mut process_infos);
 
-        thread::sleep(std::time::Duration::from_millis(1000));
+        thread::sleep(std::time::Duration::from_millis(8000));
         for info in &process_infos {
             println!("proc:{:?}", info);
         }
