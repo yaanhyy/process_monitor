@@ -12,49 +12,36 @@ fn main() {
         return;
     }
     println!("input arg:{}", input);
+    if let Ok(Fork::Child) = daemon(true, true) {
+        while(true) {
+            Command::new("sleep")
+                .arg("3")
+                .output()
+                .expect("failed to execute process");
+        }
+    }
+    println!("exit!");
+}
 
-
+#[test]
+fn comand_test() {
+    let mut pid_name = String::new();
+    println!("init");
 
 
     while(true) {
-        let mut pid_name = String::new();
         io::stdin()
             .read_line(&mut pid_name)
             .expect("Failed to read line");
 
+     q   if pid_name.eq("exit") {
+            break;
+        }
         println!("You input process name is: {}", pid_name);
 
-        /// spawn process
-        match fork() {
-            Ok(Fork::Parent(child)) => {
-                println!("Continuing execution in parent process, new child has pid: {}", child);
-            }
-            Ok(Fork::Child) => {
-               // if let Ok(Fork::Child) = daemon(false, false) {
-                    println!("process run:{}", &pid_name);
-                    while(true) {
-                        let ten_millis = Duration::from_millis(1000);
+        Command::new("forever")
+            .arg(&pid_name).spawn()
+            .expect("failed to execute process");
 
-
-                        thread::sleep(ten_millis);
-                    }
-               // }
-            },
-            Err(_) => println!("Fork failed"),
-        }
-
-
-        println!("parent loop!");
-
-        // spawn thread
-        // thread::spawn(move || {
-        //     println!("process run:{}", &pid_name);
-        //    while(true) {
-        //
-        //
-        //    }
-        // });
     }
-
-    println!("exit!");
 }

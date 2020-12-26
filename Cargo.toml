@@ -1,5 +1,6 @@
 [workspace]
 members = [
     "forever",
-    "monitor"
+    "monitor",
+    "spawn_forever"
 ]
