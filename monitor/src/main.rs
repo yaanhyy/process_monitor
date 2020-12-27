@@ -2,7 +2,7 @@ use std::{io, thread, time::Duration, env, convert::AsRef};
 use std::process::Command;
 use serde::{Serialize, Deserialize};
 use std::collections::HashMap;
-
+use sysinfo::{ProcessExt, System, SystemExt};
 #[derive(Serialize, Deserialize, Default, Debug)]
 pub struct ProcessInfo {
     pub pid: String,
@@ -91,6 +91,10 @@ fn main() {
     } else {
         println!("only need one arg used as pid name");
         return;
+    }
+    let s = System::new_all();
+    for (pid, process) in s.get_processes() {
+        println!("{} {} {:?}", pid, process.name(), process.cmd());
     }
     println!("input process name:{}", input);
     let mut process_infos = HashMap::new();
