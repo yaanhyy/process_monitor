@@ -34,7 +34,7 @@ fn comand_test() {
             .read_line(&mut pid_name)
             .expect("Failed to read line");
 
-     q   if pid_name.eq("exit") {
+        if pid_name.eq("exit") {
             break;
         }
         println!("You input process name is: {}", pid_name);
