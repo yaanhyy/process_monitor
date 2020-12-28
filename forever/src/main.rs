@@ -29,12 +29,15 @@ fn comand_test() {
     println!("init");
 
 
+
+
     while(true) {
+       let mut pid_name = String::new();
         io::stdin()
             .read_line(&mut pid_name)
             .expect("Failed to read line");
 
-        if pid_name.eq("exit") {
+       if pid_name.eq("exit") {
             break;
         }
         println!("You input process name is: {}", pid_name);
@@ -44,4 +47,5 @@ fn comand_test() {
             .expect("failed to execute process");
 
     }
+    println!("parent loop!");
 }

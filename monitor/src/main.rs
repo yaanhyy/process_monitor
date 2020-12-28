@@ -18,13 +18,9 @@ fn scan_process_info(process_name: &str, mut process_infos: & mut HashMap<String
     let st = String::from_utf8_lossy(&output.stdout);
     let lines = st.split("\n");
 
+    //init process infos before scan,set status to killed
     let mut ori_pids: Vec<String> = Vec::new();
-
-
-
-
-    process_infos.iter_mut().for_each(|(_,info)| {info.status="killed".to_string()});
-
+    process_infos.iter_mut().for_each(|(_,info)| {info.status="killed".to_string();ori_pids.push(info.pid.clone())});
 
     for line in lines {
         if line.contains(process_name) {
@@ -72,9 +68,7 @@ fn scan_process_info(process_name: &str, mut process_infos: & mut HashMap<String
                 .expect("failed to execute process");
 
             println!("restart:{:?}", res);
-
         }
-
     }
 
     for key in killed_keys {
