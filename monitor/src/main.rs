@@ -63,7 +63,7 @@ fn scan_process_info(process_name: &str, mut process_infos: & mut HashMap<String
         if info.status.contains("killed") {
             println!("killed proc:{:?}", info);
             killed_keys.push(key.clone());
-            let res = Command::new("forever")
+            let res = Command::new(process_name)
                 .arg(&info.arg).spawn()
                 .expect("failed to execute process");
 
